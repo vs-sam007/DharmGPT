@@ -1,0 +1,255 @@
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+.dg{background:#0A0805;min-height:700px;display:flex;flex-direction:column;align-items:center;font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;color:#E8DFC8;padding:32px 20px 28px;position:relative}
+.wordmark{font-size:10px;letter-spacing:.26em;color:#3A3028;text-transform:uppercase;margin-bottom:40px}
+.orb-stage{position:relative;width:230px;height:230px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;flex-shrink:0;cursor:pointer}
+.ring{position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,.07);top:50%;left:50%;animation:rspin linear infinite}
+.r1{width:206px;height:206px;margin-top:-103px;margin-left:-103px;animation-duration:22s}
+.r2{width:228px;height:228px;margin-top:-114px;margin-left:-114px;animation-duration:38s;animation-direction:reverse;border-style:dashed;border-color:rgba(201,168,76,.04)}
+.r1::after,.r2::after{content:'';position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(201,168,76,.45);top:-2px;left:50%;transform:translateX(-50%)}
+.r3{width:185px;height:185px;margin-top:-92px;margin-left:-92px;animation-duration:14s;border-color:rgba(201,168,76,.05);animation-direction:reverse}
+@keyframes rspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+#orb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;border-radius:50%}
+.pname{font-size:26px;font-weight:300;letter-spacing:.05em;margin-bottom:4px;text-align:center;transition:all .9s ease}
+.ptitle{font-size:10px;letter-spacing:.18em;color:#4A3F32;text-align:center;text-transform:uppercase;margin-bottom:14px;transition:color .9s}
+.status{font-size:11px;letter-spacing:.12em;color:#4A3F32;text-align:center;height:16px;margin-bottom:24px;transition:color .5s}
+.status.lit{color:#C9A84C}
+.pdots{display:flex;gap:16px;margin-bottom:24px;align-items:center;position:relative}
+.pdot{width:8px;height:8px;border-radius:50%;cursor:pointer;border:none;opacity:.25;transition:opacity .35s,transform .35s;position:relative}
+.pdot.on{opacity:1;transform:scale(1.5)}
+.pdot:hover{opacity:.6}
+.pdot-tip{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:11px;color:#C4B898;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;background:#131008;padding:3px 9px;border-radius:4px;border:1px solid rgba(201,168,76,.12)}
+.pdot:hover .pdot-tip{opacity:1}
+.vcard{width:100%;max-width:450px;background:#0D0A07;border:1px solid rgba(201,168,76,.09);border-radius:10px;padding:16px 20px;margin-bottom:24px;min-height:88px;transition:border-color .9s}
+.vref{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#C9A84C;margin-bottom:8px;opacity:.75}
+.vbody{font-size:13px;line-height:1.85;color:#B8AA90;font-style:italic;font-weight:300}
+.microw{display:flex;flex-direction:column;align-items:center;gap:10px}
+.micbtn{width:50px;height:50px;border-radius:50%;background:transparent;border:1px solid rgba(201,168,76,.18);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .35s;outline:none}
+.micbtn:hover{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.04)}
+.micbtn.on{border-color:#C9A84C;background:rgba(201,168,76,.08)}
+.mic-hint{font-size:9px;letter-spacing:.1em;color:#3A3028;text-transform:uppercase;text-align:center}
+.demo-bar{display:flex;gap:6px;align-items:flex-end;height:16px;margin-bottom:2px}
+.db{width:3px;border-radius:2px;background:#C9A84C;opacity:0;transition:opacity .3s}
+.db.vis{opacity:.6;animation:dbpulse 1.2s ease-in-out infinite}
+.db:nth-child(1){height:6px;animation-delay:0s}
+.db:nth-child(2){height:10px;animation-delay:.15s}
+.db:nth-child(3){height:14px;animation-delay:.3s}
+.db:nth-child(4){height:10px;animation-delay:.45s}
+.db:nth-child(5){height:6px;animation-delay:.6s}
+@keyframes dbpulse{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+</style>
+
+<div class="dg">
+  <div class="wordmark">DharmaGPT</div>
+  <div class="orb-stage" id="orbstage" onclick="toggleMic()">
+    <div class="ring r2"></div>
+    <div class="ring r1"></div>
+    <div class="ring r3"></div>
+    <canvas id="orb" width="154" height="154"></canvas>
+  </div>
+  <div class="pname" id="pname">Krishna</div>
+  <div class="ptitle" id="ptitle">Bhagavad Gita · The Eternal Counsel</div>
+  <div class="status" id="status">Tap the orb to speak your dilemma</div>
+  <div class="pdots">
+    <button class="pdot on" style="background:#4A7FA5" data-i="0"><span class="pdot-tip">Krishna</span></button>
+    <button class="pdot" style="background:#5A8A5A" data-i="1"><span class="pdot-tip">Vidura</span></button>
+    <button class="pdot" style="background:#888888" data-i="2"><span class="pdot-tip">Bhishma</span></button>
+    <button class="pdot" style="background:#A07850" data-i="3"><span class="pdot-tip">Yudhishthira</span></button>
+    <button class="pdot" style="background:#8B3A2A" data-i="4"><span class="pdot-tip">Draupadi</span></button>
+  </div>
+  <div class="vcard" id="vcard">
+    <div class="vref" id="vref">Awaiting your dilemma</div>
+    <div class="vbody" id="vbody">Speak freely. The ancient texts have weathered every dilemma a mortal can carry.</div>
+  </div>
+  <div class="microw">
+    <div class="demo-bar" id="demobar">
+      <div class="db" id="db0"></div>
+      <div class="db" id="db1"></div>
+      <div class="db" id="db2"></div>
+      <div class="db" id="db3"></div>
+      <div class="db" id="db4"></div>
+    </div>
+    <button class="micbtn" id="micbtn" onclick="toggleMic()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" id="micsvg">
+        <rect x="9" y="2" width="6" height="12" rx="3"/>
+        <path d="M5 10a7 7 0 0014 0"/>
+        <line x1="12" y1="19" x2="12" y2="22"/>
+        <line x1="8" y1="22" x2="16" y2="22"/>
+      </svg>
+    </button>
+    <div class="mic-hint" id="michint">tap to speak</div>
+  </div>
+</div>
+
+<script>
+const P=[
+  {name:'Krishna',title:'Bhagavad Gita · The Eternal Counsel',color:'#4A7FA5',
+   ref:'Bhagavad Gita · Chapter 2, Verse 47',
+   verse:'You have a right to perform your prescribed duties, but never to the fruits of your actions. Never consider yourself the cause of results — and never be attached to inaction.'},
+  {name:'Vidura',title:'Vidura Niti · Udyoga Parva',color:'#5A8A5A',
+   ref:'Vidura Niti · Udyoga Parva, Chapter 33',
+   verse:'A man who silences his own counsel to preserve his comfort destroys himself before any enemy can reach him. Speak truth. Pay the price willingly.'},
+  {name:'Bhishma',title:'Shanti Parva · Mahabharata Book 12',color:'#888888',
+   ref:'Shanti Parva · Mahabharata 12.56',
+   verse:'I chose duty and watched everything I loved be undone by it. I do not ask you to follow me. I tell you this so you understand, fully, what choosing means.'},
+  {name:'Yudhishthira',title:'Yaksha Prashna · Vana Parva',color:'#A07850',
+   ref:'Yaksha Prashna · Vana Parva, Chapter 313',
+   verse:'Each day men see others perish and still believe themselves immortal. This is the greatest wonder in all the world. What is it that you believe you are immune to?'},
+  {name:'Draupadi',title:'Sabha Parva · Mahabharata Book 2',color:'#8B3A2A',
+   ref:'Sabha Parva · Mahabharata 2.68',
+   verse:'I was staked like a wager and not consulted. I did not break. Your anger is not a flaw to be corrected — it is a signal. Obey it with precision.'}
+];
+
+function hr(h){return[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)).join(',')}
+
+let ap=0,st='idle',audioCtx=null,analyser=null,darr=null,mstream=null;
+let afId=null,simT=null;
+const t0=Date.now();
+const cv=document.getElementById('orb');
+const cx2=cv.getContext('2d');
+const W=154,H=154,OX=77,OY=77,OR=50;
+
+function drawOrb(){
+  const t=Date.now()-t0;
+  const col=P[ap].color;
+  const rgb=hr(col);
+  cx2.clearRect(0,0,W,H);
+
+  if(st==='idle'||st==='processing'){
+    const b=1+Math.sin(t*0.0014)*0.045;
+    const r=OR*b;
+    [[r+18,.025],[r+10,.06],[r+4,.1]].forEach(([rad,a])=>{
+      cx2.beginPath();cx2.arc(OX,OY,rad,0,Math.PI*2);
+      cx2.fillStyle=`rgba(${rgb},${a})`;cx2.fill();
+    });
+    cx2.beginPath();cx2.arc(OX,OY,r,0,Math.PI*2);
+    cx2.fillStyle=`rgba(${rgb},.14)`;cx2.fill();
+    cx2.beginPath();cx2.arc(OX,OY,r*.42,0,Math.PI*2);
+    cx2.fillStyle=`rgba(${rgb},.24)`;cx2.fill();
+    cx2.beginPath();cx2.arc(OX,OY,r,0,Math.PI*2);
+    cx2.strokeStyle=`rgba(${rgb},.3)`;cx2.lineWidth=1;cx2.stroke();
+    if(st==='processing'){
+      const ang=(t*0.004)%(Math.PI*2);
+      cx2.beginPath();cx2.arc(OX,OY,OR+14,ang,ang+Math.PI*1.3);
+      cx2.strokeStyle=`rgba(${rgb},.55)`;cx2.lineWidth=1.5;cx2.lineCap='round';cx2.stroke();
+    }
+  } else {
+    const BARS=80,MAXB=28;
+    let fq=null;
+    if(analyser&&darr){analyser.getByteFrequencyData(darr);fq=darr;}
+    for(let i=0;i<BARS;i++){
+      const ang=(i/BARS)*Math.PI*2-Math.PI/2;
+      let v;
+      if(fq){v=fq[Math.floor(i*fq.length/BARS)]/255;}
+      else{v=(Math.sin(t*0.0038+i*0.38)*0.38+0.62)*(Math.sin(t*0.0087+i*0.14)*0.22+0.78)*0.72;}
+      const bh=v*MAXB+2;
+      const ir=OR+3,ou=OR+3+bh;
+      cx2.beginPath();
+      cx2.moveTo(OX+Math.cos(ang)*ir,OY+Math.sin(ang)*ir);
+      cx2.lineTo(OX+Math.cos(ang)*ou,OY+Math.sin(ang)*ou);
+      cx2.strokeStyle=`rgba(${rgb},${.3+v*.7})`;
+      cx2.lineWidth=2;cx2.lineCap='round';cx2.stroke();
+    }
+    const pu=1+Math.sin(t*0.005)*0.028;
+    [[OR*.88*pu,.14],[OR*.44*pu,.26]].forEach(([r,a])=>{
+      cx2.beginPath();cx2.arc(OX,OY,r,0,Math.PI*2);
+      cx2.fillStyle=`rgba(${rgb},${a})`;cx2.fill();
+    });
+    cx2.beginPath();cx2.arc(OX,OY,OR*.88*pu,0,Math.PI*2);
+    cx2.strokeStyle=`rgba(${rgb},.38)`;cx2.lineWidth=1;cx2.stroke();
+  }
+  afId=requestAnimationFrame(drawOrb);
+}
+
+function setPersona(i){
+  ap=i;
+  const p=P[i];
+  document.getElementById('pname').textContent=p.name;
+  document.getElementById('ptitle').textContent=p.title;
+  document.querySelectorAll('.pdot').forEach((d,j)=>d.classList.toggle('on',j===i));
+  if(st==='idle'){typeVerse(p.ref,p.verse);}
+}
+
+function setStatus(msg,lit=false){
+  const el=document.getElementById('status');
+  el.textContent=msg;el.classList.toggle('lit',lit);
+}
+
+function setDemoBars(on){
+  document.querySelectorAll('.db').forEach(d=>d.classList.toggle('vis',on));
+}
+
+function typeVerse(ref,text){
+  document.getElementById('vref').textContent=ref;
+  const el=document.getElementById('vbody');
+  el.textContent='';let i=0;
+  const iv=setInterval(()=>{
+    if(i<text.length){el.textContent+=text[i];i++;}
+    else clearInterval(iv);
+  },16);
+}
+
+async function startMic(){
+  try{
+    mstream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    audioCtx=new AudioContext();
+    const src=audioCtx.createMediaStreamSource(mstream);
+    analyser=audioCtx.createAnalyser();analyser.fftSize=256;
+    darr=new Uint8Array(analyser.frequencyBinCount);
+    src.connect(analyser);return true;
+  }catch(e){return false;}
+}
+
+function stopMic(){
+  if(mstream){mstream.getTracks().forEach(t=>t.stop());mstream=null;}
+  if(audioCtx){audioCtx.close();audioCtx=null;}
+  analyser=null;darr=null;
+}
+
+function processResp(){
+  stopMic();setDemoBars(false);
+  st='processing';
+  setStatus('Consulting the texts...',true);
+  document.getElementById('michint').textContent='processing';
+  setTimeout(()=>{
+    st='speaking';
+    setStatus('Speaking',true);
+    document.getElementById('michint').textContent='tap to stop';
+    const p=P[ap];typeVerse(p.ref,p.verse);
+    setTimeout(()=>{
+      st='idle';
+      document.getElementById('micbtn').classList.remove('on');
+      setStatus('Tap the orb to speak your dilemma');
+      document.getElementById('michint').textContent='tap to speak';
+    },7500);
+  },1600);
+}
+
+async function toggleMic(){
+  const btn=document.getElementById('micbtn');
+  if(st==='idle'){
+    st='listening';btn.classList.add('on');
+    setStatus('Listening...',true);
+    document.getElementById('michint').textContent='tap to send';
+    setDemoBars(true);
+    const ok=await startMic();
+    if(!ok)setStatus('Demo mode — mic unavailable',true);
+    simT=setTimeout(()=>processResp(),6500);
+  } else if(st==='listening'){
+    clearTimeout(simT);processResp();
+  } else if(st==='speaking'){
+    st='idle';btn.classList.remove('on');
+    setStatus('Tap the orb to speak your dilemma');
+    document.getElementById('michint').textContent='tap to speak';
+    setDemoBars(false);
+  }
+}
+
+document.querySelectorAll('.pdot').forEach(d=>{
+  d.addEventListener('click',e=>{e.stopPropagation();setPersona(+d.dataset.i);});
+});
+document.getElementById('micbtn').addEventListener('click',e=>e.stopPropagation());
+
+drawOrb();
+</script>
