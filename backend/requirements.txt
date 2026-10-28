@@ -6,9 +6,8 @@ pydantic
 pydantic-settings
 python-dotenv
 websockets
-groq
+google-genai
 sse-starlette
-faster-whisper
 edge-tts
 soundfile
 numpy

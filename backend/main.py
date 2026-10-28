@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 
 from rag.chroma_client import get_persona_collection
-from groq_client import generate_persona_response, stream_persona_response, stream_persona_response
+from gemini_client import generate_persona_response, stream_persona_response
 from services.redis_cache import get_cached_response, set_cached_response
 from services.voice_engine import generate_speech_bytes
 
@@ -69,7 +69,7 @@ async def voice_session(websocket: WebSocket, persona: str):
     await websocket.accept()
     logger.info(f"Voice session started for persona: {persona}")
     try:
-        from groq_client import transcribe_audio_async
+        from gemini_client import transcribe_audio_async
         
         while True:
             data = await websocket.receive()
@@ -208,7 +208,7 @@ async def ask_persona(request: ChatRequest):
     # RAG retrieval
     context = _retrieve_context(request.query, request.persona)
 
-    # Generate via Groq
+    # Generate via Gemini
     try:
         import anyio
         response_text = await anyio.to_thread.run_sync(
@@ -219,7 +219,7 @@ async def ask_persona(request: ChatRequest):
             request.persona,
         )
     except Exception as e:
-        logger.error(f"Groq generation failed: {e}")
+        logger.error(f"Gemini generation failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
     response_data = {
