@@ -311,7 +311,10 @@ export function useDharmaAudio({
 
   const connectWebSocket = useCallback(() => {
     return new Promise((resolve, reject) => {
-      const wsUrl = `ws://localhost:8000/ws/voice/${persona}`;
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://dharma-gpt.onrender.com';
+      const wsProtocol = baseUrl.startsWith('https') ? 'wss' : 'ws';
+      const host = baseUrl.replace(/^https?:\/\//, '');
+      const wsUrl = `${wsProtocol}://${host}/ws/voice/${persona}`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
@@ -320,7 +323,7 @@ export function useDharmaAudio({
         if (ws.readyState !== WebSocket.OPEN) {
           console.error('[DharmaAudio] WebSocket connection timed out after 10s');
           ws.close();
-          reject(new Error('Connection timed out. Is the backend running at localhost:8000?'));
+          reject(new Error(`Connection timed out. Is the backend running at ${baseUrl}?`));
         }
       }, 10000);
 

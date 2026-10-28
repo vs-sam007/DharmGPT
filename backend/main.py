@@ -49,6 +49,15 @@ class TokenRequest(BaseModel):
 
 # ─── Health ─────────────────────────────────────────────────────────────────
 
+@app.get("/")
+def root():
+    return {
+        "status": "online",
+        "service": "DharmaGPT Backend",
+        "docs": "/docs",
+        "health": "/health"
+    }
+
 @app.get("/health")
 def health_check():
     return {"status": "sacred parameters online"}
